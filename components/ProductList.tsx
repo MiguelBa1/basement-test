@@ -1,5 +1,5 @@
 import ProductCard from "../components/ProductCard";
-import products from "../product/mock.json";
+import {products} from "../data/productsMock";
 
 const ProductList = () => {
   return (
@@ -8,7 +8,7 @@ const ProductList = () => {
         <ProductCard
           key={prod._id}
           _id={prod._id}
-          img={prod.img}
+          img={prod.imageUrl}
           name={prod.name}
           price={prod.price}
         />

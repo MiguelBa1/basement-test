@@ -8,13 +8,13 @@ const useCartLogic = () => {
   const {showCart, cartItems, showHideCart} = useContext<CartContextType>(CartContext);
 
   const calculateTotal = () => {
-    return cartItems.reduce((amount, item) => item.price * item.qty + amount, 0);
+    return cartItems.reduce((amount, item) => item.price * item.quantity + amount, 0);
   };
 
   const handleCheckout = () => {
     cartItems.forEach((item) => {
       console.log(
-        `Product: ${item.name}, price: $${item.price}, size: ${item.size}, quantity: ${item.qty}`,
+        `Product: ${item.name}, price: $${item.price}, size: ${item.size}, quantity: ${item.quantity}`,
       );
     });
     const total = formatCurrency(calculateTotal());

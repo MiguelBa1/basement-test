@@ -22,10 +22,10 @@ const CartContent: React.FC<CartContentProps> = ({cartItems}) => {
           key={item._id}
           _id={item._id}
           description={item.description}
-          img={item.img}
+          img={item.imageUrl}
           name={item.name}
           price={item.price}
-          qty={item.qty}
+          qty={item.quantity}
           size={item.size}
         />
       ))}
