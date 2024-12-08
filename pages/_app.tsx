@@ -1,9 +1,11 @@
 import type {AppProps} from "next/app";
 import {useRouter} from "next/router";
+import {Provider} from "react-redux";
+
+import {store} from "../store";
 
 import "../css/global.css";
 import MetaTags from "../components/MetaTags";
-import CartState from "../context/cart/CartState";
 
 function App({Component, pageProps}: AppProps) {
   const getBaseUrl = () => {
@@ -27,9 +29,9 @@ function App({Component, pageProps}: AppProps) {
         title="Basement Supply"
         url={url}
       />
-      <CartState>
+      <Provider store={store}>
         <Component {...pageProps} />
-      </CartState>
+      </Provider>
     </>
   );
 }
