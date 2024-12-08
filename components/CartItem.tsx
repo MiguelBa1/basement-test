@@ -1,21 +1,29 @@
 import Image from "next/image";
-import {useContext} from "react";
+import {useDispatch} from "react-redux";
 
 import {formatCurrency} from "../utils/formatCurrency";
-import CartContext from "../context/cart/CartContext";
+import {updateCartQuantity, updateCartSize, removeFromCart} from "../store/slices/cartSlice";
 import {CartItem as CartItemType} from "../types";
 
 interface CartItemProps {
   item: CartItemType;
 }
 
-const CartItem = ({
-  item: {_id, name, imageUrl, description, price, quantity, size},
-}: CartItemProps) => {
-  const {changeQty, changeSize} = useContext(CartContext);
+const CartItem = ({item}: CartItemProps) => {
+  const {_id, name, imageUrl, price, quantity, size} = item;
+  const dispatch = useDispatch();
 
-  const handleQuantityChange = (delta: number) => changeQty({_id, qty: quantity + delta});
-  const handleSizeChange = (selectedSize: string) => changeSize({_id, size: selectedSize});
+  const handleQuantityChange = (delta: number) => {
+    if (quantity + delta === 0) {
+      dispatch(removeFromCart(_id));
+    } else {
+      dispatch(updateCartQuantity({id: _id, quantity: quantity + delta}));
+    }
+  };
+
+  const handleSizeChange = (selectedSize: string) => {
+    dispatch(updateCartSize({id: _id, size: selectedSize}));
+  };
 
   return (
     <li className="flex p-2 mt-1 border-2 border-white h-36">
@@ -24,7 +32,6 @@ const CartItem = ({
       </div>
       <div className="flex flex-col justify-between pl-3 md:text-xl">
         <div>{name}</div>
-        <div className="text-sm text-gray-500 md:text-lg">{description}</div>
         <QuantitySelector quantity={quantity} onChange={handleQuantityChange} />
         <SizeSelector currentSize={size} onSizeChange={handleSizeChange} />
         <div className="text-sm md:text-lg">{formatCurrency(price)}</div>

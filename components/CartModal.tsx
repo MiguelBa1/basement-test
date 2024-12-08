@@ -1,17 +1,33 @@
 import React from "react";
+import {useSelector, useDispatch} from "react-redux";
 
-import useCartLogic from "../hooks/useCartLogic";
+import {RootState} from "../store";
+import {toggleCart} from "../store/slices/cartSlice";
+import {formatCurrency} from "../utils/formatCurrency";
 
 import CartContent from "./CartContent";
 
-const Cart: React.FC = () => {
-  const {showCart, cartItems, showHideCart, handleCheckout, formattedTotal} = useCartLogic();
+const CartModal: React.FC = () => {
+  const dispatch = useDispatch();
+  const {showCart, cartItems} = useSelector((state: RootState) => state.cart);
 
   const handleBackgroundClick = (e: React.MouseEvent<HTMLDivElement>) => {
     if (e.target === e.currentTarget) {
-      showHideCart();
+      dispatch(toggleCart());
     }
   };
+
+  const handleCheckout = () => {
+    const total = formatCurrency(
+      cartItems.reduce((amount, item) => item.price * item.quantity + amount, 0),
+    );
+
+    alert(`Total: ${total}`);
+  };
+
+  const formattedTotal = formatCurrency(
+    cartItems.reduce((amount, item) => item.price * item.quantity + amount, 0),
+  );
 
   return (
     <>
@@ -28,7 +44,7 @@ const Cart: React.FC = () => {
           }`}
         >
           <div className="text-right">
-            <button onClick={showHideCart}>→ CLOSE</button>
+            <button onClick={() => dispatch(toggleCart())}>→ CLOSE</button>
           </div>
           <div className="text-center text-8xl">
             YOUR <span className="text-stroke-white text-stroke-2 text-fill-transparent">CART</span>
@@ -54,4 +70,4 @@ const Cart: React.FC = () => {
   );
 };
 
-export default Cart;
+export default CartModal;

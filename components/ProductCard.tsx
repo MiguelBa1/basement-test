@@ -1,24 +1,22 @@
 import Image from "next/image";
-import {useContext} from "react";
+import {useDispatch} from "react-redux";
 
-import {formatCurrency} from "../utils/formatCurrency";
+import {addToCart, toggleCart} from "../store/slices/cartSlice";
 import hoverImg from "../public/add-to-cart.svg";
-import CartContext from "../context/cart/CartContext";
 import {Product} from "../types";
 
 interface ProductCardProps {
   product: Product;
 }
 
-const ProductCard = ({product: {_id, name, imageUrl, price}}: ProductCardProps) => {
-  const {addToCart, showHideCart} = useContext(CartContext);
+const ProductCard = ({product}: ProductCardProps) => {
+  const {name, imageUrl, price} = product;
+  const dispatch = useDispatch();
 
   const handleAddToCart = () => {
-    addToCart({_id, name, imageUrl, price});
-    showHideCart();
+    dispatch(addToCart({...product, size: "M", quantity: 1}));
+    dispatch(toggleCart());
   };
-
-  const formattedPrice = formatCurrency(price);
 
   return (
     <div>
@@ -36,7 +34,7 @@ const ProductCard = ({product: {_id, name, imageUrl, price}}: ProductCardProps) 
       </button>
       <div className="flex justify-between text-xl font-basement-black">
         <span>{name}</span>
-        <span>{formattedPrice}</span>
+        <span>{price}</span>
       </div>
     </div>
   );

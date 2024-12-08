@@ -1,13 +1,15 @@
 import Image from "next/image";
-import {useContext} from "react";
+import {useSelector, useDispatch} from "react-redux";
 
-import CartContext from "../context/cart/CartContext";
+import {RootState} from "../store";
+import {toggleCart} from "../store/slices/cartSlice";
 import smallLogo from "../public/logo-small.svg";
 import largeLogo from "../public/logo-large.svg";
 import hd_4k from "../public/hd-4k.svg";
 
 const HeaderBar = () => {
-  const {cartItems, showHideCart} = useContext(CartContext);
+  const dispatch = useDispatch();
+  const {cartItems} = useSelector((state: RootState) => state.cart);
 
   return (
     <nav className="flex justify-between p-4 md:p-5">
@@ -22,7 +24,7 @@ const HeaderBar = () => {
       </div>
       <button
         className="px-5 border-2 font-basement-black rounded-3xl"
-        onClick={() => showHideCart()}
+        onClick={() => dispatch(toggleCart())}
       >
         CART(<span style={{minWidth: "20px", display: "inline-block"}}>{cartItems.length}</span>)
       </button>
