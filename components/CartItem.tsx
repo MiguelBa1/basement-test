@@ -3,40 +3,51 @@ import {useContext} from "react";
 
 import {formatCurrency} from "../utils/formatCurrency";
 import CartContext from "../context/cart/CartContext";
+import {CartItem as CartItemType} from "../types";
 
-const CartItem = ({_id, name, img, description, qty, size, price}) => {
+interface CartItemProps {
+  item: CartItemType;
+}
+
+const CartItem = ({
+  item: {_id, name, imageUrl, description, price, quantity, size},
+}: CartItemProps) => {
   const {changeQty, changeSize} = useContext(CartContext);
 
-  const handleIncrement = () => changeQty({_id, qty: qty + 1});
-  const handleDecrement = () => changeQty({_id, qty: qty - 1});
-  const handleSize = (selectedSize) => changeSize({_id, size: selectedSize});
+  const handleQuantityChange = (delta: number) => changeQty({_id, qty: quantity + delta});
+  const handleSizeChange = (selectedSize: string) => changeSize({_id, size: selectedSize});
 
   return (
     <li className="flex p-2 mt-1 border-2 border-white h-36">
       <div className="relative w-24 h-32 bg-gradient-to-b from-final-gray to-initial-black">
-        <Image alt={name} layout="fill" src={img} />
+        <Image alt={name} layout="fill" src={imageUrl} />
       </div>
       <div className="flex flex-col justify-between pl-3 md:text-xl">
         <div>{name}</div>
         <div className="text-sm text-gray-500 md:text-lg">{description}</div>
-        <QuantitySelector qty={qty} onDecrement={handleDecrement} onIncrement={handleIncrement} />
-        <SizeSelector currentSize={size} onSizeChange={handleSize} />
+        <QuantitySelector quantity={quantity} onChange={handleQuantityChange} />
+        <SizeSelector currentSize={size} onSizeChange={handleSizeChange} />
         <div className="text-sm md:text-lg">{formatCurrency(price)}</div>
       </div>
     </li>
   );
 };
 
-const QuantitySelector = ({qty, onIncrement, onDecrement}) => (
+interface QuantitySelectorProps {
+  quantity: number;
+  onChange: (delta: number) => void;
+}
+
+const QuantitySelector = ({quantity, onChange}: QuantitySelectorProps) => (
   <div className="text-xs md:text-lg">
     QUANTITY:
     <div className="inline-block w-16 px-1 ml-3 border rounded-xl">
       <div className="flex justify-around">
-        <button aria-label="Decrement quantity" onClick={onDecrement}>
+        <button aria-label="Decrement quantity" onClick={() => onChange(-1)}>
           -
         </button>
-        <span>{qty}</span>
-        <button aria-label="Increment quantity" onClick={onIncrement}>
+        <span>{quantity}</span>
+        <button aria-label="Increment quantity" onClick={() => onChange(1)}>
           +
         </button>
       </div>
@@ -44,14 +55,14 @@ const QuantitySelector = ({qty, onIncrement, onDecrement}) => (
   </div>
 );
 
-const SizeSelector = ({currentSize, onSizeChange}) => {
+interface SizeSelectorProps {
+  currentSize: string;
+  onSizeChange: (size: string) => void;
+}
+
+const SizeSelector = ({currentSize, onSizeChange}: SizeSelectorProps) => {
   const sizes = ["S", "M", "L", "XL"];
-  const sizeLabels = {
-    S: "Small",
-    M: "Medium",
-    L: "Large",
-    XL: "Extra Large",
-  };
+  const isSelected = (size: string) => currentSize === size;
 
   return (
     <div className="text-xs md:text-lg">
@@ -60,9 +71,8 @@ const SizeSelector = ({currentSize, onSizeChange}) => {
         {sizes.map((size) => (
           <button
             key={size}
-            aria-label={`Size ${sizeLabels[size]}`}
-            aria-pressed={currentSize === size}
-            className={`px-2 ${currentSize === size ? "border rounded-xl" : ""}`}
+            aria-pressed={isSelected(size)}
+            className={`px-2 ${isSelected(size) ? "border rounded-xl" : ""}`}
             onClick={() => onSizeChange(size)}
           >
             {size}

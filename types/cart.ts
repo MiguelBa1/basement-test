@@ -1,12 +1,12 @@
 import {Product} from "./product";
 
-export interface CartItemType extends Product {
+export interface CartItem extends Product {
   size: string;
   quantity: number;
 }
 
 export interface CartContextType {
   showCart: boolean;
-  cartItems: CartItemType[];
+  cartItems: CartItem[];
   showHideCart: () => void;
 }

@@ -4,12 +4,17 @@ import {useContext} from "react";
 import {formatCurrency} from "../utils/formatCurrency";
 import hoverImg from "../public/add-to-cart.svg";
 import CartContext from "../context/cart/CartContext";
+import {Product} from "../types";
 
-const ProductCard = ({_id, name, img, price}) => {
+interface ProductCardProps {
+  product: Product;
+}
+
+const ProductCard = ({product: {_id, name, imageUrl, price}}: ProductCardProps) => {
   const {addToCart, showHideCart} = useContext(CartContext);
 
   const handleAddToCart = () => {
-    addToCart({_id, name, img, price});
+    addToCart({_id, name, imageUrl, price});
     showHideCart();
   };
 
@@ -23,7 +28,7 @@ const ProductCard = ({_id, name, img, price}) => {
         onClick={handleAddToCart}
       >
         <div>
-          <Image alt={name} height={1156} src={img} width={880} />
+          <Image alt={name} height={1156} src={imageUrl} width={880} />
         </div>
         <div className="absolute inset-0 flex items-center justify-center duration-500 opacity-0 cursor-pointer hover:opacity-100">
           <Image alt="hover image" src={hoverImg} />
