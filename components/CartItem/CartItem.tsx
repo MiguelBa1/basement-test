@@ -1,8 +1,7 @@
 import Image from "next/image";
-import {useDispatch} from "react-redux";
 
+import {useCartStore} from "../../store/useCartStore";
 import {formatCurrency} from "../../utils/formatCurrency";
-import {updateCartQuantity, updateCartSize, removeFromCart} from "../../store/slices/cartSlice";
 import {CartItem as CartItemType} from "../../types";
 
 import {QuantitySelector, SizeSelector} from "./index";
@@ -13,18 +12,21 @@ interface CartItemProps {
 
 const CartItem = ({item}: CartItemProps) => {
   const {_id, name, imageUrl, price, quantity, size} = item;
-  const dispatch = useDispatch();
+
+  const removeFromCart = useCartStore((state) => state.removeFromCart);
+  const updateCartQuantity = useCartStore((state) => state.updateCartQuantity);
+  const updateCartSize = useCartStore((state) => state.updateCartSize);
 
   const handleQuantityChange = (delta: number) => {
     if (quantity + delta === 0) {
-      dispatch(removeFromCart(_id));
+      removeFromCart(_id);
     } else {
-      dispatch(updateCartQuantity({id: _id, quantity: quantity + delta}));
+      updateCartQuantity(_id, quantity + delta);
     }
   };
 
   const handleSizeChange = (selectedSize: string) => {
-    dispatch(updateCartSize({id: _id, size: selectedSize}));
+    updateCartSize(_id, selectedSize);
   };
 
   return (

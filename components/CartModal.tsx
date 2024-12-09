@@ -1,19 +1,18 @@
 import React from "react";
-import {useSelector, useDispatch} from "react-redux";
 
-import {RootState} from "../store";
-import {toggleCart} from "../store/slices/cartSlice";
+import {useCartStore} from "../store/useCartStore";
 import {formatCurrency} from "../utils/formatCurrency";
 
 import CartContent from "./CartContent";
 
 const CartModal: React.FC = () => {
-  const dispatch = useDispatch();
-  const {showCart, cartItems} = useSelector((state: RootState) => state.cart);
+  const cartItems = useCartStore((state) => state.cartItems);
+  const showCart = useCartStore((state) => state.showCart);
+  const toggleCart = useCartStore((state) => state.toggleCart);
 
   const handleBackgroundClick = (e: React.MouseEvent<HTMLDivElement>) => {
     if (e.target === e.currentTarget) {
-      dispatch(toggleCart());
+      toggleCart();
     }
   };
 
@@ -44,7 +43,7 @@ const CartModal: React.FC = () => {
           }`}
         >
           <div className="text-right">
-            <button onClick={() => dispatch(toggleCart())}>→ CLOSE</button>
+            <button onClick={toggleCart}>→ CLOSE</button>
           </div>
           <div className="text-center text-8xl">
             YOUR <span className="text-stroke-white text-stroke-2 text-fill-transparent">CART</span>
