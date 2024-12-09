@@ -1,17 +1,12 @@
-import ProductCard from "../components/ProductCard";
-import products from "../product/mock.json";
+import {products} from "../data/productsMock";
+
+import ProductCard from "./ProductCard";
 
 const ProductList = () => {
   return (
     <div className="m-4 sm:justify-evenly sm:gap-5 sm:flex">
-      {products.map((prod) => (
-        <ProductCard
-          key={prod._id}
-          _id={prod._id}
-          img={prod.img}
-          name={prod.name}
-          price={prod.price}
-        />
+      {products.map((product) => (
+        <ProductCard key={product._id} product={product} />
       ))}
     </div>
   );

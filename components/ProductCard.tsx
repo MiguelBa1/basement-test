@@ -1,19 +1,22 @@
 import Image from "next/image";
-import {useContext} from "react";
+import {useDispatch} from "react-redux";
 
-import {formatCurrency} from "../utils/formatCurrency";
+import {addToCart, toggleCart} from "../store/slices/cartSlice";
 import hoverImg from "../public/add-to-cart.svg";
-import CartContext from "../context/cart/CartContext";
+import {Product} from "../types";
 
-const ProductCard = ({_id, name, img, price}) => {
-  const {addToCart, showHideCart} = useContext(CartContext);
+interface ProductCardProps {
+  product: Product;
+}
+
+const ProductCard = ({product}: ProductCardProps) => {
+  const {name, imageUrl, price} = product;
+  const dispatch = useDispatch();
 
   const handleAddToCart = () => {
-    addToCart({_id, name, img, price});
-    showHideCart();
+    dispatch(addToCart({...product, size: "M", quantity: 1}));
+    dispatch(toggleCart());
   };
-
-  const formattedPrice = formatCurrency(price);
 
   return (
     <div>
@@ -23,7 +26,7 @@ const ProductCard = ({_id, name, img, price}) => {
         onClick={handleAddToCart}
       >
         <div>
-          <Image alt={name} height={1156} src={img} width={880} />
+          <Image alt={name} height={1156} src={imageUrl} width={880} />
         </div>
         <div className="absolute inset-0 flex items-center justify-center duration-500 opacity-0 cursor-pointer hover:opacity-100">
           <Image alt="hover image" src={hoverImg} />
@@ -31,7 +34,7 @@ const ProductCard = ({_id, name, img, price}) => {
       </button>
       <div className="flex justify-between text-xl font-basement-black">
         <span>{name}</span>
-        <span>{formattedPrice}</span>
+        <span>{price}</span>
       </div>
     </div>
   );

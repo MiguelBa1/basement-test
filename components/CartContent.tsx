@@ -1,4 +1,4 @@
-import {CartItemType} from "../types";
+import {CartItem as CartItemType} from "../types/cart";
 
 import CartItem from "./CartItem";
 
@@ -6,7 +6,7 @@ interface CartContentProps {
   cartItems: CartItemType[];
 }
 
-const CartContent: React.FC<CartContentProps> = ({cartItems}) => {
+const CartContent = ({cartItems}: CartContentProps) => {
   if (cartItems.length === 0) {
     return (
       <div className="flex items-center justify-center h-full">
@@ -18,16 +18,7 @@ const CartContent: React.FC<CartContentProps> = ({cartItems}) => {
   return (
     <ul>
       {cartItems.map((item) => (
-        <CartItem
-          key={item._id}
-          _id={item._id}
-          description={item.description}
-          img={item.img}
-          name={item.name}
-          price={item.price}
-          qty={item.qty}
-          size={item.size}
-        />
+        <CartItem key={item._id} item={item} />
       ))}
     </ul>
   );
